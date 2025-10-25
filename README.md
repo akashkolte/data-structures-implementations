@@ -87,7 +87,7 @@ Goal: Build deep understanding, not just API usage — to crush MAANG-level inte
 -  Implement using Doubly Linked List + HashMap
 -  get(key), put(key), display_cache()
 
-### 🌸 Bloom Filter (optional)
+### 🌸 Bloom Filter
 -  Bit array, multiple hash functions
 -  add(item), check(item)
 
