@@ -99,6 +99,16 @@ Goal: Build deep understanding, not just API usage — to crush MAANG-level inte
 -  Build suffix trie
 -  Search for substring pattern
 
+## String Data Structures
+- Trie
+- Suffix Trie
+- Suffix Array
+
+## Algorithmic Patterns
+- Monotonic Stack
+- Two Pointers
+- Sliding Window
+
 ---
 
 ## 🧩 Extra Structures
