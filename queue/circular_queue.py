@@ -1,1 +1,2 @@
-# TODO
+# # TODO
+# •    Circular buffer implementation
