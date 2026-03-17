@@ -8,7 +8,7 @@
 # • delete_at_index(index)
 
 # Search & Access:
-# • search(value)
+# • contains(value)
 # • get(index)
 # • size()
 # • is_empty()
@@ -86,7 +86,8 @@ class LinkedList:
         
         prev = curr.next
     
-    def search(self, value):
+    # Check if value exists in the list.
+    def contains(self, value):
         if not value:
             return
 
