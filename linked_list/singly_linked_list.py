@@ -1,153 +1,158 @@
-# TODO: Singly Linked List Implementation
-# Core Operations:
-# • insert_at_head(value)
-# • insert_at_tail(value)
-# • insert_at_index(value, index)
-# • delete(value)                     → delete first occurrence
-# • delete_all(value)                 → delete all occurrences
-# • delete_at_index(index)
-
-# Search & Access:
-# • contains(value)
-# • get(index)
-# • size()
-# • is_empty()
-
-# Transformations:
-# • reverse()
-
-# Cycle Operations (Floyd’s Algorithm):
-# • detect_cycle()
-# • has_cycle_length()
-# • find_cycle_start()
-
-# Utility Functions:
-# • print_list()
-# • clear()
-
-# Advanced:
-# • middle()                          → using fast/slow pointers
-
-# Pythonic Representations:
-# • __str__()                         → human-readable (e.g., 1 -> 2 -> None)
-# • __repr__()                        → developer-friendly (e.g., LinkedList([1, 2]))
-
-class ListNode:
+class Node:
     def __init__(self, val, next=None):
         self.val = val
         self.next = next
 
 class LinkedList:
     def __init__(self):
-        self.head = None
-    
-    def insert_at_head(self, value):
-        if not value:
-            return
+        self.head = None  
 
-        new_node = ListNode(value)
-        new_node.next = self.head
-        self.head = new_node
-
-    def insert_at_tail(self, value):
-        if not value:
-            return
+    def __repr__(self):
+        if self.head == None:
+            return "[]"
         
-        new_node = ListNode(value)
-        curr = self.head
-        while curr.next:
-            curr = curr.next
+        prev = self.head
 
-        curr.next = new_node
-    
-    def delete(self, value):
-        if not value:
-            return
-        
-        curr = self.head
-        prev = ListNode(0)
-        while curr:
-            if curr.val == value:
-                prev.next = curr.next
+        return_string = f"[{prev.val}"
+
+        while prev.next:
             prev = prev.next
-            curr = curr.next
-
-    def delete_at_index(self, index):
-        if not index:
-            return
+            return_string += f", {prev.val}"
         
-        curr = self.head
-        prev = ListNode(0)
-        i = 0
-        while i < index:
-            i += 1
-            curr = curr.next
+        return_string += "]"
+
+        return return_string
+
+    # length of the list
+    def __len__(self):
+        length = 0
+
+        prev = self.head
+        while prev:
+            length += 1
             prev = prev.next
         
-        prev = curr.next
+        return length
     
     # Check if value exists in the list.
-    def contains(self, value):
-        if not value:
-            return
+    def __contains__(self, value):
+        prev = self.head
 
-        curr = self.head
-        while curr:
-            if curr.val == value:
+        while prev:
+            if prev.val == value:
                 return True
-            curr = curr.next
-        
+            prev = prev.next
+
         return False
     
-    def reverse(self):
-        pass
+    def append(self, value):
+        if self.head == None:
+            self.head = Node(value)
+        else:
+            prev = self.head
 
-    def detect_cycle(self):
-        pass
-
-    def print_list(self):
-        pass
-
-    def is_empty(self):
-        pass
-
-    # size of the list
-    def size(self):
-        pass
-
-    # delete all occurence of a particular value
-    def delete_all(self, value):
-        pass
-
-    def insert_at_index(self, value, index):
-        pass
-
-    # get value at index
-    def get(self, index):
-        pass
-
-    # find middle of the list
-    def middle(self):
-        pass
-
-    # check if cycle exists, if yes then find length
-    def has_cycle_length(self):
-        pass
-
-    # if cycle exists then return starting node of cycle
-    def find_cycle_start(self):
-        pass
+            while prev.next != None:
+                prev = prev.next
+            
+            prev.next = Node(value)
     
-    # reset the list
-    def clear(self):
-        self.head = None
+    def prepend(self, value):
+        newNode = Node(value)
+        newNode.next = self.head
+        self.head = newNode
 
-    # Returns a human-readable string representation of the linked list (used by print()).
-    # Ex: 20 -> 10 -> 5 -> None    
-    def __str__(self):
-        pass
+    def insert(self, value, index):
+        if index == 0:
+            self.prepend(value)
+        else:
+            prev = self.head
 
-    # Returns an unambiguous, developer-friendly string representation of the object (used for debugging and in interpreter).
-    # Ex: LinkedList([20, 10, 5])
-    def __repr__(self):
-        pass
+            for _ in range(index-1):
+                if prev is None:
+                    raise IndexError("Index out of bounds")
+                prev = prev.next
+            
+            newNode = Node(value)
+            newNode.next = prev.next
+            prev.next = newNode
+
+    def delete(self, value):
+        prev = self.head
+        if prev == None:
+            raise ValueError("No such value exists")
+        
+        if prev.val == value:
+            self.head = prev.next
+            return
+
+        while prev.next:
+            if prev.next.val == value:
+                prev.next = prev.next.next
+                return
+            prev = prev.next
+        
+        raise ValueError("No such value exists")
+    
+    def pop(self, index):
+        if self.head == None:
+            raise IndexError("Index out of bounds")
+
+        if index == 0:
+            self.head = self.head.next
+            return
+
+        prev = self.head
+        for _ in range(index-1):
+            if prev.next is None:
+                raise IndexError("Index out of bounds")
+            prev = prev.next
+        
+        if prev.next == None:
+            raise IndexError("Index out of bounds")
+
+        prev.next = prev.next.next
+    
+    def get(self, index):
+        if self.head == None:
+            raise IndexError("Index out of bounds")
+        
+        prev = self.head
+        for i in range(index):
+            if prev.next != None:
+                prev = prev.next
+            else:
+                raise IndexError("Index out of bounds")
+        
+        return prev.val
+
+if __name__ == '__main__':
+    ll = LinkedList()
+
+    ll.append(5)
+    ll.append(10)
+    ll.append(20)
+    ll.append(-1)
+    ll.append(7)
+
+    print("1", ll)
+
+    ll.prepend(100)
+
+    print("2", ll)
+
+    ll.insert(200, 1)
+
+    print("3", ll)
+
+    ll.delete(10)
+
+    print("4", ll)
+
+    ll.pop(1)
+
+    print(ll)
+
+    print(ll.get(1))
+    print(20 in ll)
+    print(800 in ll)
+    print(len(ll))

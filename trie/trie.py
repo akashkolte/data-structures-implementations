@@ -2,8 +2,8 @@
 
 class TrieNode:
     def __init__(self):
-        self.children = dict()
-        self.is_end_of_word = False
+        self.children = {}
+        self.is_end = False
 
 class Trie:
     def __init__(self):
