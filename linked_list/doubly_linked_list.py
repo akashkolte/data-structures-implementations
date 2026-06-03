@@ -1,121 +1,184 @@
-# TODO: Doubly Linked List Implementation
-
-# Core Operations:
-# • insert_at_head(value)
-# • insert_at_tail(value)
-# • insert_at_index(value, index)
-# • delete(value)                     → delete first occurrence
-# • delete_all(value)                 → delete all occurrences
-# • delete_at_index(index)
-
-# Search & Access:
-# • contains(value)
-# • get(index)
-# • size()
-# • is_empty()
-
-# Traversal:
-# • print_forward()
-# • print_backward()
-
-# Transformations:
-# • reverse()
-
-# Utility:
-# • clear()
-
-# Advanced:
-# • middle()                          → using fast/slow pointers
-
-# Pythonic Representations:
-# • __str__()                         → 1 <-> 2 <-> None
-# • __repr__()                        → DoublyLinkedList([1, 2])
-
-class DoublyListNode:
-    def __init__(self, val, prev=None, next=None):
+class Node:
+    def __init__(self, val, next=None, prev=None):
         self.val = val
-        self.prev = prev
         self.next = next
-
+        self.prev = prev
 
 class DoublyLinkedList:
     def __init__(self):
         self.head = None
-        self.tail = None  # important for O(1) tail ops
-
-    # Insert a new node at the beginning of the list.
-    def insert_at_head(self, value):
-        pass
-
-    # Insert a new node at the end of the list.
-    def insert_at_tail(self, value):
-        pass
-
-    # Insert a new node at a given index in the list.
-    def insert_at_index(self, value, index):
-        pass
-
-    # Delete the first occurrence of a node with the given value.
-    def delete(self, value):
-        pass
-
-    # Delete all nodes that match the given value.
-    def delete_all(self, value):
-        pass
-
-    # Delete the node at a specific index.
-    def delete_at_index(self, index):
-        pass
-
-    # Check if value exists in the list.
-    def contains(self, value):
-        pass
-
-    # Return the value at a specific index.
-    def get(self, index):
-        pass
-
-    # Return the number of nodes in the list.
-    def size(self):
-        pass
-
-    # Check if the list is empty.
-    def is_empty(self):
-        pass
-
-    # Print the list from head to tail.
-    def print_forward(self):
-        pass
-
-    # Print the list from tail to head.
-    def print_backward(self):
-        pass
-
-    # Reverse the doubly linked list in-place by swapping prev and next pointers of each node and updating head and tail.
-    def reverse(self):
-        pass
-
-    # Find and return the middle node using fast and slow pointers.
-    def middle(self):
-        pass
-
-    # Clear the list by removing all nodes.
-    def clear(self):
-        self.head = None
         self.tail = None
 
-    # Return a human-readable string representation of the list (e.g., 1 <-> 2 <-> None).
-    def __str__(self):
-        pass
-
-    # Return a developer-friendly representation of the list (e.g., DoublyLinkedList([1, 2])).
     def __repr__(self):
-        pass
+        if self.head == None:
+            return "[]"
+        
+        prev = self.head
 
-    # Remove and return the head node.    
-    def pop_head(self):
-        pass
+        return_string = f"[{prev.val}"
+
+        while prev.next:
+            prev = prev.next
+            return_string += f", {prev.val}"
+        
+        return_string += "]"
+
+        return return_string
+
+    # length of the list
+    def __len__(self):
+        length = 0
+
+        prev = self.head
+        while prev:
+            length += 1
+            prev = prev.next
+        
+        return length
     
-    # Remove and return the tail node.
-    def pop_tail(self):
-        pass
+    # Check if value exists in the list.
+    def __contains__(self, value):
+        prev = self.head
+
+        while prev:
+            if prev.val == value:
+                return True
+            prev = prev.next
+
+        return False
+    
+    def append(self, value):
+        if self.head == None:
+            self.head = Node(value)
+            self.tail = self.head
+        else:
+            last_node = Node(value)
+            last_node.prev = self.tail
+            self.tail.next = last_node
+            self.tail = last_node
+
+    
+    def prepend(self, value):
+        if self.head == None:
+            self.head = Node(value)
+            self.tail = self.head
+        else:    
+            newNode = Node(value)
+            newNode.next = self.head
+            self.head.prev = newNode
+            self.head = newNode
+
+    def insert(self, value, index):
+        if index == 0:
+            self.prepend(value)
+        else:
+            prev = self.head
+
+            for _ in range(index-1):
+                if prev is None:
+                    raise IndexError("Index out of bounds")
+                prev = prev.next
+            
+            newNode = Node(value)
+            newNode.next = prev.next
+            newNode.prev = prev
+            if prev.next != None:
+                prev.next.prev = newNode
+            prev.next = newNode
+
+    def delete(self, value):
+        prev = self.head
+        if prev == None:
+            raise ValueError("No such value exists")
+        
+        if prev.val == value:
+            self.head = prev.next
+            if self.head:
+                self.head.prev = None
+            else:
+                self.tail = None
+            return
+
+        while prev.next:
+            if prev.next.val == value:
+                if prev.next.next != None:
+                    prev.next.next.prev = prev
+                else:
+                    self.tail = prev
+                prev.next = prev.next.next
+                return
+            prev = prev.next
+        
+        raise ValueError("No such value exists")
+    
+    def pop(self, index):
+        if self.head == None:
+            raise IndexError("Index out of bounds")
+
+        if index == 0:
+            self.head = self.head.next
+            if self.head:
+                self.head.prev = None
+            else:
+                self.tail = None
+            return
+
+        prev = self.head
+        for _ in range(index-1):
+            if prev.next is None:
+                raise IndexError("Index out of bounds")
+            prev = prev.next
+        
+        if prev.next == None:
+            raise IndexError("Index out of bounds")
+
+        if prev.next.next != None:
+            prev.next.next.prev = prev
+        else:
+            self.tail = prev
+        prev.next = prev.next.next
+    
+    def get(self, index):
+        if self.head == None:
+            raise IndexError("Index out of bounds")
+        
+        prev = self.head
+        for i in range(index):
+            if prev.next != None:
+                prev = prev.next
+            else:
+                raise IndexError("Index out of bounds")
+        
+        return prev.val
+
+if __name__ == '__main__':
+    ll = DoublyLinkedList()
+
+    ll.append(5)
+    ll.append(10)
+    ll.append(20)
+    ll.append(-1)
+    ll.append(7)
+
+    print("1", ll)
+
+    ll.prepend(100)
+
+    print("2", ll)
+
+    ll.insert(200, 1)
+
+    print("3", ll)
+
+    ll.delete(10)
+
+    print("4", ll)
+
+    ll.pop(1)
+
+    print(ll)
+
+    print(ll.get(1))
+    print(20 in ll)
+    print(800 in ll)
+    print(len(ll))
